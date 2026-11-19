@@ -18,42 +18,68 @@
 
 ## 语音示例
 
-> 都是**真机跑出来的**（本机 GPT-SoVITS v5turbo + e8 LoRA + e10 GPT）。
+> **真机跑出来的**（本机 GPT-SoVITS v5turbo + e8 LoRA + e10 GPT），点播放器即可听。
+> 每条都给了波形视频（MP4，能看波形 + 播放头）和 MP3；视频也能从 Release 下载原文件。
 
-| # | 场景 | 念出来的（日语） | 屏幕上的（中文） | 下载 |
-|---|---|---|---|---|
-| 01 | 迎接 | おかえりなさいませ、マスター。ご飯はまだ温かいです。 | ……主人回来了。饭还温着。 | 
+### 01 · 迎接（4.8 s）
 
 https://github.com/user-attachments/assets/c160d071-7400-4a65-ba0f-eab3426ae78e
 
+> おかえりなさいませ、マスター。ご飯はまだ温かいです。
 
-| 02 | 完整一轮 | マスターが戻りました。ご飯はまだ温かいまま、ルーシーがずっと一番奥の段に入れておきました。 | ……主人回来了。饭还温着的，露西一直搁在最里面那一格。 
+……主人回来了。饭还温着。
+
+[♪ MP3](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/01-greeting.mp3) · [⬇ MP4 原文件](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/01-greeting.mp4)
+
+### 02 · 完整一轮（报时间＋动作）（11.7 s）
 
 https://github.com/user-attachments/assets/3c4f68a7-e420-4f49-a9e9-f6a8818a8478
 
+> マスターが戻りました。ご飯はまだ温かいまま、ルーシーがずっと一番奥の段に入れておきました。
 
-| 03 | 自报家门 | ルーシー・ヴァレンタインです。サンプル名はこれで、PIM-001。 | 露西·瓦伦汀。样品名称就是这个，PIM-001。 |
+……主人回来了。饭还温着的，露西一直搁在最里面那一格。
+
+[♪ MP3](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/02-full-reply.mp3) · [⬇ MP4 原文件](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/02-full-reply.mp4)
+
+### 03 · 自报家门（15.7 s）
 
 https://github.com/user-attachments/assets/c3e8d05e-af33-4bfe-9f6e-b10ba13bdc30
 
+> ルーシー・ヴァレンタインです。サンプル名はこれで、PIM-001。
 
-| 04 | 情绪 [开心] | 初めてマスターに褒めてもらえました。嬉しい！ | 第一次被主人夸了。好开心！ | 
+露西·瓦伦汀。样品名称就是这个，PIM-001。
+
+[♪ MP3](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/03-who-are-you.mp3) · [⬇ MP4 原文件](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/03-who-are-you.mp4)
+
+### 04 · 情绪 `[开心]`（4.0 s）
 
 https://github.com/user-attachments/assets/f0a5d472-e7bd-4599-80eb-1df30e2a2b37
 
+> 初めてマスターに褒めてもらえました。嬉しい！
 
-| 05 | 情绪 [温柔]+[停:300] | ……そこにいてください。ルーシー、ご飯を温めてきますね。 | ……请待在那里。露西去把饭热一下。 | 
+第一次被主人夸了。好开心！
+
+[♪ MP3](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/04-emotion-happy.mp3) · [⬇ MP4 原文件](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/04-emotion-happy.mp4)
+
+### 05 · 情绪 `[温柔]` + `[停:300]`（5.1 s）
 
 https://github.com/user-attachments/assets/e4df95f1-de80-4875-9bc7-07deace60d70
 
+> ……そこにいてください。ルーシー、ご飯を温めてきますね。
 
-| 06 | 中文兜底 | —— | 主人，饭已经做好了。 | 
+……请待在那里。露西去把饭热一下。
+
+[♪ MP3](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/05-emotion-soft.mp3) · [⬇ MP4 原文件](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/05-emotion-soft.mp4)
+
+### 06 · 中文兜底（2.0 s）
 
 https://github.com/user-attachments/assets/5f7b4f2d-da62-4c97-80a6-890835c2cbdc
 
+> ——
 
+主人，饭已经做好了。
 
-
+[♪ MP3](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/06-zh-fallback.mp3) · [⬇ MP4 原文件](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/06-zh-fallback.mp4)
 
 第 06 条是「模型没写 `<ja>` 时」的兜底：还是她的音色，但中文发音带口音——
 这正是这个插件坚持让模型写**日语朗读稿**的原因。
