@@ -93,7 +93,7 @@ def main() -> int:
     demo_src = ROOT / "docs" / "demo"
     if demo_src.is_dir():
         for media in sorted(demo_src.iterdir()):
-            if media.suffix in (".mp3", ".mp4") and media.is_file():
+            if media.suffix in (".mp3", ".mp4", ".png", ".md") and media.is_file():
                 shutil.copy2(media, demo / media.name)
     else:
         for sample in (ROOT / "out" / "live_std.wav",):

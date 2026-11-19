@@ -21,18 +21,21 @@
 > 下面都是**真机跑出来的**（本机 GPT-SoVITS v5turbo + e8 LoRA + e10 GPT）。
 > 每条都给了**波形视频**（MP4，直接能听也能看波形）和**音频**（MP3 96 kbps）。
 >
-> GitHub 的 Markdown 会过滤 `<video>` / `<audio>` 标签，所以这里放链接——点开就在浏览器里播。
-> 想要**页内播放器**：在 GitHub 网页编辑 README 时，把 `docs/demo/*.mp4` 拖进去，
-> 它会自动上传成 `user-attachments` 链接，那种链接才会渲染成播放器。
+> GitHub 会过滤 `<video>` / `<audio>` 标签，所以这里用**海报图 + 链接**：
+> 缩略图是波形视频的一帧（带播放键），**点一下**就打开 MP4（GitHub 给 MP4 内置播放器，有画面有声音）。
+>
+> 想要「页内直接播放」的视频，只能在网页编辑器里把 MP4 拖进 README——
+> 那种会上传成 `user-attachments` 链接，才会渲染成播放器。要用的占位模板见
+> [`docs/demo/embed-snippet.md`](docs/demo/embed-snippet.md)。
 
-| # | 场景 | 念出来的（日语） | 屏幕上的（中文） | 波形视频 / 音频 |
+| # | 场景 | 念出来的（日语） | 屏幕上的（中文） | 点开看波形视频 |
 |---|---|---|---|---|
-| 01 | 迎接 | おかえりなさいませ、マスター。ご飯はまだ温かいです。 | ……主人回来了。饭还温着。 | [▶ 4.8 s](docs/demo/01-greeting.mp4) · [♪](docs/demo/01-greeting.mp3) |
-| 02 | 完整一轮（报时间＋动作） | マスターが戻りました。ご飯はまだ温かいまま、ルーシーがずっと一番奥の段に入れておきました。まず座ってください。ルーシーが持ってきます。 | ……主人回来了。饭还温着的，露西一直搁在最里面那一格。先坐下吧，露西去盛。 | [▶ 11.7 s](docs/demo/02-full-reply.mp4) · [♪](docs/demo/02-full-reply.mp3) |
-| 03 | 被问「你是谁」 | ルーシー・ヴァレンタインです。サンプル名はこれで、PIM-001。炊事、洗濯、掃除、こういうことはルーシーにできます。 | 露西·瓦伦汀。样品名称就是这个，PIM-001。做饭、洗衣、打扫，这些露西都会…… | [▶ 15.7 s](docs/demo/03-who-are-you.mp4) · [♪](docs/demo/03-who-are-you.mp3) |
-| 04 | 情绪 `[开心]` | 初めてマスターに褒めてもらえました。嬉しい！ | 第一次被主人夸了。好开心！ | [▶ 4.0 s](docs/demo/04-emotion-happy.mp4) · [♪](docs/demo/04-emotion-happy.mp3) |
-| 05 | 情绪 `[温柔]` + `[停:300]` | ……そこにいてください。ルーシー、ご飯を温めてきますね。 | ……请待在那里。露西去把饭热一下。 | [▶ 5.1 s](docs/demo/05-emotion-soft.mp4) · [♪](docs/demo/05-emotion-soft.mp3) |
-| 06 | 中文兜底（说明口音） | —— | 主人，饭已经做好了。 | [▶ 2.0 s](docs/demo/06-zh-fallback.mp4) · [♪](docs/demo/06-zh-fallback.mp3) |
+| 01 | 迎接 | おかえりなさいませ、マスター。ご飯はまだ温かいです。 | ……主人回来了。饭还温着。 | [<img width="190" src="docs/demo/01-greeting.poster.png">](docs/demo/01-greeting.mp4)<br>▶ 4.8 s · [♪ MP3](docs/demo/01-greeting.mp3) |
+| 02 | 完整一轮（报时间＋动作） | マスターが戻りました。ご飯はまだ温かいまま、ルーシーがずっと一番奥の段に入れておきました。まず座ってください。ルーシーが持ってきます。 | ……主人回来了。饭还温着的，露西一直搁在最里面那一格。先坐下吧，露西去盛。 | [<img width="190" src="docs/demo/02-full-reply.poster.png">](docs/demo/02-full-reply.mp4)<br>▶ 11.7 s · [♪ MP3](docs/demo/02-full-reply.mp3) |
+| 03 | 被问「你是谁」 | ルーシー・ヴァレンタインです。サンプル名はこれで、PIM-001。炊事、洗濯、掃除、こういうことはルーシーにできます。 | 露西·瓦伦汀。样品名称就是这个，PIM-001。做饭、洗衣、打扫，这些露西都会…… | [<img width="190" src="docs/demo/03-who-are-you.poster.png">](docs/demo/03-who-are-you.mp4)<br>▶ 15.7 s · [♪ MP3](docs/demo/03-who-are-you.mp3) |
+| 04 | 情绪 `[开心]` | 初めてマスターに褒めてもらえました。嬉しい！ | 第一次被主人夸了。好开心！ | [<img width="190" src="docs/demo/04-emotion-happy.poster.png">](docs/demo/04-emotion-happy.mp4)<br>▶ 4.0 s · [♪ MP3](docs/demo/04-emotion-happy.mp3) |
+| 05 | 情绪 `[温柔]` + `[停:300]` | ……そこにいてください。ルーシー、ご飯を温めてきますね。 | ……请待在那里。露西去把饭热一下。 | [<img width="190" src="docs/demo/05-emotion-soft.poster.png">](docs/demo/05-emotion-soft.mp4)<br>▶ 5.1 s · [♪ MP3](docs/demo/05-emotion-soft.mp3) |
+| 06 | 中文兜底（说明口音） | —— | 主人，饭已经做好了。 | [<img width="190" src="docs/demo/06-zh-fallback.poster.png">](docs/demo/06-zh-fallback.mp4)<br>▶ 2.0 s · [♪ MP3](docs/demo/06-zh-fallback.mp3) |
 
 第 06 条是「模型没写 `<ja>` 时」的兜底：还是她的音色，但中文发音带口音——
 这正是这个插件坚持让模型写**日语朗读稿**的原因。
