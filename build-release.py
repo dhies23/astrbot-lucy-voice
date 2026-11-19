@@ -90,10 +90,15 @@ def main() -> int:
     # 4) 试听
     demo = STAGE / "demo"
     demo.mkdir()
-    for sample in (ROOT / "docs" / "demo" / "japanese_sample.wav", ROOT / "out" / "live_std.wav"):
-        if sample.exists():
-            shutil.copy2(sample, demo / "japanese_sample.wav")
-            break
+    demo_src = ROOT / "docs" / "demo"
+    if demo_src.is_dir():
+        for mp3 in sorted(demo_src.glob("*.mp3")):
+            shutil.copy2(mp3, demo / mp3.name)
+    else:
+        for sample in (ROOT / "out" / "live_std.wav",):
+            if sample.exists():
+                shutil.copy2(sample, demo / "japanese_sample.wav")
+                break
 
     # 5) 版本与校验
     (STAGE / "VERSION.txt").write_text(
