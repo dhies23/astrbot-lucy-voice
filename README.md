@@ -33,7 +33,7 @@
 
 https://github.com/user-attachments/assets/c160d071-7400-4a65-ba0f-eab3426ae78e
 
-(https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/01-greeting.mp3) |
+
 | 02 | 完整一轮 | マスターが戻りました。ご飯はまだ温かいまま、ルーシーがずっと一番奥の段に入れておきました。 | ……主人回来了。饭还温着的，露西一直搁在最里面那一格。 
 
 https://github.com/user-attachments/assets/3c4f68a7-e420-4f49-a9e9-f6a8818a8478
