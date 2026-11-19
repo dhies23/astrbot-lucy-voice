@@ -105,16 +105,7 @@ def main() -> int:
     zip_plugin(STAGE / "astrbot-plugin-lucy-voice-1.0.0.zip")
     zip_plugin(DIST / "astrbot-plugin-lucy-voice-1.0.0.zip")
 
-    # 1b) 权重（可选）：放进插件目录的 weights/，插件启动时自己扫
     weights_dir = None if args.no_weights else find_weights(args.weights_dir)
-    if weights_dir:
-        wdst = STAGE / "astrbot-plugin-lucy-voice" / "weights"
-        wdst.mkdir(parents=True, exist_ok=True)
-        for f in WEIGHT_FILES:
-            shutil.copy2(weights_dir / f, wdst / f)
-        print(f"权重已打包：{weights_dir} → 插件目录/weights/")
-    else:
-        print("!! 没找到权重，打成精简版（需要用户自己下权重）")
 
     # 2) 安装器
     for name in ("install.py", "install-lucy-astrbot.cmd", "uninstall-lucy-astrbot.cmd", "安装说明.md"):
@@ -147,13 +138,24 @@ def main() -> int:
     (STAGE / "SHA256SUMS.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
     # 6) 打包
-    suffix = "-full" if weights_dir else ""
-    out = DIST / f"{NAME}{suffix}.zip"
+    # 先打精简版（不含权重），再塞权重打完整版
+    out = DIST / f"{NAME}.zip"
     zip_tree(STAGE, out, NAME)
+    print(f"精简包 {out.name}: {out.stat().st_size/1024/1024:.2f} MB")
+
+    if weights_dir:
+        wdst = STAGE / "astrbot-plugin-lucy-voice" / "weights"
+        wdst.mkdir(parents=True, exist_ok=True)
+        for f in WEIGHT_FILES:
+            shutil.copy2(weights_dir / f, wdst / f)
+        out = DIST / f"{NAME}-full.zip"
+        zip_tree(STAGE, out, NAME)
+        print(f"完整包 {out.name}: {out.stat().st_size/1024/1024:.2f} MB（含权重，来自 {weights_dir}）")
+    else:
+        print("!! 没找到权重，只出精简版")
     total = sum(p.stat().st_size for p in STAGE.rglob("*") if p.is_file())
     print(f"文件数 {len(files)} / 解包后 {total/1024/1024:.2f} MB")
-    print(f"整合包 {out.name}: {out.stat().st_size/1024/1024:.2f} MB"
-          + ("（含权重）" if weights_dir else "（不含权重）"))
+
     print(f"  sha256 {sha256(out)}")
     print(f"单包   astrbot-plugin-lucy-voice-1.0.0.zip: "
           f"{(DIST/'astrbot-plugin-lucy-voice-1.0.0.zip').stat().st_size/1024/1024:.2f} MB")
