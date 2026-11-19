@@ -67,18 +67,6 @@ https://github.com/user-attachments/assets/e4df95f1-de80-4875-9bc7-07deace60d70
 ……请待在那里。露西去把饭热一下。
 
 
-### 06 · 中文兜底（2.0 s）
-
-https://github.com/user-attachments/assets/5f7b4f2d-da62-4c97-80a6-890835c2cbdc
-
-> ——
-
-主人，饭已经做好了。
-
-
-第 06 条是「模型没写 `<ja>` 时」的兜底：还是她的音色，但中文发音带口音——
-这正是这个插件坚持让模型写**日语朗读稿**的原因。
-
 ---
 
 ## 目录
