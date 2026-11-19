@@ -1,0 +1,65 @@
+{
+ "std_jp.wav": {
+  "source": "lucy0037",
+  "promptText": "やっと来てくれたんですね、マスター！ 首を長くして待っておりました！",
+  "ch": 1,
+  "width": 2,
+  "rate": 32000,
+  "frames": 185089,
+  "seconds": 5.78
+ },
+ "calm_jp.wav": {
+  "source": "lucy0038",
+  "promptText": "はい、そうですよ。 ルーシィは他でもないルーシィです",
+  "ch": 1,
+  "width": 2,
+  "rate": 32000,
+  "frames": 167175,
+  "seconds": 5.22
+ },
+ "happy_jp.wav": {
+  "source": "lucy0043",
+  "promptText": "初めてマスターに褒めてもらえました。 嬉しい！",
+  "ch": 1,
+  "width": 2,
+  "rate": 32000,
+  "frames": 138686,
+  "seconds": 4.33
+ },
+ "excited_jp.wav": {
+  "source": "lucy0361",
+  "promptText": "わあ！ 社長！ ナイスショーーーーット！！！ パチパチパチ！ とーっても素敵ですぅ！",
+  "ch": 1,
+  "width": 2,
+  "rate": 32000,
+  "frames": 263681,
+  "seconds": 8.24
+ },
+ "soft_jp.wav": {
+  "source": "lucy0133",
+  "promptText": "……分かりません。 さっきから笑いが自然と込み上げてくるんです",
+  "ch": 1,
+  "width": 2,
+  "rate": 32000,
+  "frames": 138070,
+  "seconds": 4.31
+ },
+ "quiet_jp.wav": {
+  "source": "lucy0124",
+  "promptText": "周りは暗闇で、人の気配など全くなくて…",
+  "ch": 1,
+  "width": 2,
+  "rate": 32000,
+  "frames": 166947,
+  "seconds": 5.22
+ },
+ "shy_jp.wav": {
+  "source": "lucy0342",
+  "promptText": "あ、あの！ えっと…マスター？",
+  "ch": 1,
+  "width": 2,
+  "rate": 32000,
+  "frames": 124331,
+  "seconds": 3.89
+ }
+}

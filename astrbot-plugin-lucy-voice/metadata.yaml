@@ -1,0 +1,8 @@
+name: astrbot_plugin_lucy_voice
+display_name: 露西语音（Lucy Voice）
+desc: 露西 SKILL 语音版：完整人格（含导演核对）+ GPT-SoVITS 日语配音，QQ 里先发语音再发文字
+short_desc: 先说话，再落字
+help: 发 /露西 看状态；/露西 开|关|静音|出声|念 <文本>|情绪 <预设>|重启
+version: v1.0.0
+author: lucy-project
+astrbot_version: ">=4.5,<5"

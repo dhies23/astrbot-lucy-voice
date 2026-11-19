@@ -1,0 +1,255 @@
+{
+  "enabled": {
+    "description": "总开关",
+    "type": "bool",
+    "hint": "关掉以后完全不介入：不注入人格，也不发语音",
+    "default": true
+  },
+  "persona": {
+    "description": "人格（露西 SKILL 完整版）",
+    "type": "object",
+    "hint": "两种用法：①在 AstrBot 人格里建「露西」（跑 tools/setup_astrbot_persona.py），插件只补语音；②人格空着，全交给插件",
+    "items": {
+      "inject": {
+        "description": "注入人格",
+        "type": "bool",
+        "hint": "AstrBot「人格」里没有露西时，由插件注入完整版人格；已经配了露西人格就只补语音协议（不会重复）",
+        "default": true
+      },
+      "include_casebook": {
+        "description": "同时注入案例卡",
+        "type": "bool",
+        "hint": "casebook.md（约 18 KB）。会让提示词变长很多，通常不必开",
+        "default": false
+      },
+      "include_voice_lib": {
+        "description": "同时注入原话库",
+        "type": "bool",
+        "hint": "voice.md（约 10 KB）。想要语感更稳可以打开",
+        "default": false
+      },
+      "extra_prompt": {
+        "description": "追加设定",
+        "type": "string",
+        "hint": "接在人格最后。比如「这个群里叫她小露」",
+        "default": ""
+      }
+    }
+  },
+  "voice": {
+    "description": "语音",
+    "type": "object",
+    "hint": "先发语音、再发文字的通道",
+    "items": {
+      "default_on": {
+        "description": "默认开语音",
+        "type": "bool",
+        "hint": "关掉后用 /露西 出声 打开",
+        "default": true
+      },
+      "fallback_zh": {
+        "description": "没有日语稿时用中文兜底",
+        "type": "bool",
+        "hint": "模型忘了写 <ja> 时，用中文正文合成（仍是她音色，但带口音）。关掉就只发文字",
+        "default": true
+      },
+      "max_ja_chars": {
+        "description": "日语稿字数上限",
+        "type": "int",
+        "hint": "日语稿字数上限；正文应该和它差不多长，超了会被截断",
+        "slider": {
+          "min": 40,
+          "max": 400,
+          "step": 20
+        },
+        "default": 200
+      },
+      "send_text_after_voice": {
+        "description": "语音后补发文字",
+        "type": "bool",
+        "hint": "关掉就只发语音（原版 TTS 插件的行为）",
+        "default": true
+      },
+      "send_mode": {
+        "description": "发送方式",
+        "type": "string",
+        "hint": "split=语音单独一条先发、文字随后（推荐，语音失败不影响文字）；chain=同一条消息里先语音后文字",
+        "default": "split"
+      },
+      "emotion_markers": {
+        "description": "启用情绪标记",
+        "type": "bool",
+        "hint": "允许朗读稿里写 [开心] [温柔] [停:400] 这类标记",
+        "default": true
+      },
+      "faithful": {
+        "description": "要求日语稿是正文的翻译",
+        "type": "bool",
+        "hint": "字数/句数差太多时判定为摘要，改用翻译稿；关掉就有可能出现「说的和写的不是一回事」",
+        "default": true
+      },
+      "translate_fallback": {
+        "description": "缺日语稿时自动翻译",
+        "type": "bool",
+        "hint": "模型没写 <ja> 时用当前模型把正文翻成日语再念（多一次调用，约 1 秒）",
+        "default": true
+      }
+    }
+  },
+  "tts": {
+    "description": "GPT-SoVITS 推理",
+    "type": "object",
+    "hint": "与「露西语音工坊」同一套 api_v2 参数",
+    "items": {
+      "api_base": {
+        "description": "api_v2 地址",
+        "type": "string",
+        "hint": "GPT-SoVITS 的 api_v2.py 默认 http://127.0.0.1:9880",
+        "default": "http://127.0.0.1:9880"
+      },
+      "timeout": {
+        "description": "超时（秒）",
+        "type": "int",
+        "slider": {
+          "min": 30,
+          "max": 300,
+          "step": 10
+        },
+        "default": 120
+      },
+      "gpt_weights": {
+        "description": "GPT(s1) 权重路径",
+        "type": "string",
+        "hint": "v5turbo 配套的 lucy_v1_v5turbo-e10.ckpt。留空则沿用服务当前权重",
+        "default": ""
+      },
+      "sovits_weights": {
+        "description": "SoVITS LoRA 权重路径",
+        "type": "string",
+        "hint": "lucy_v1_v5turbo_e8_s14528_l8.pth。留空则沿用服务当前权重",
+        "default": ""
+      },
+      "set_weights_on_init": {
+        "description": "启动时切权重",
+        "type": "bool",
+        "hint": "插件加载/合成前调用 /set_gpt_weights 与 /set_sovits_weights。工坊在跑时可以关掉",
+        "default": true
+      },
+      "ref_audio": {
+        "description": "参考音频",
+        "type": "string",
+        "hint": "留空则用插件自带 assets/refs/std_jp.wav（官方日配 lucy0037）",
+        "default": ""
+      },
+      "prompt_text": {
+        "description": "参考音频对应的日文",
+        "type": "string",
+        "hint": "留空则按参考音频自动取（ref_manifest.json）",
+        "default": ""
+      },
+      "text_lang": {
+        "description": "合成语种",
+        "type": "string",
+        "hint": "日语稿用 ja；中文兜底会自动切 zh，一般不用改",
+        "default": "ja"
+      },
+      "prompt_lang": {
+        "description": "参考音频语种",
+        "type": "string",
+        "default": "ja"
+      },
+      "preset": {
+        "description": "默认情绪",
+        "type": "string",
+        "hint": "std / calm / happy / excited / soft / quiet / shy",
+        "default": "std"
+      },
+      "speed": {
+        "description": "语速",
+        "type": "float",
+        "slider": {
+          "min": 0.6,
+          "max": 1.6,
+          "step": 0.02
+        },
+        "default": 1.0
+      },
+      "gap_ms": {
+        "description": "分段之间补的静音（毫秒）",
+        "type": "int",
+        "slider": {
+          "min": 0,
+          "max": 800,
+          "step": 20
+        },
+        "default": 160
+      },
+      "normalize": {
+        "description": "响度归一化",
+        "type": "bool",
+        "hint": "偏轻的提上来、贴顶的压一点",
+        "default": true
+      },
+      "auto_start": {
+        "description": "自动拉起推理服务",
+        "type": "bool",
+        "hint": "9880 没起来时用 gsv_root 里的 api_v2.py 起一个（会占显存）",
+        "default": false
+      },
+      "gsv_root": {
+        "description": "GPT-SoVITS 根目录",
+        "type": "string",
+        "hint": "含 api_v2.py 的目录；auto_start 打开时必填",
+        "default": ""
+      },
+      "base_yaml": {
+        "description": "底模 yaml",
+        "type": "string",
+        "hint": "留空则用 <gsv_root>/GPT_SoVITS/configs/tts_infer.yaml。注意：yaml 里放底模，别放 LoRA",
+        "default": ""
+      },
+      "python": {
+        "description": "Python 解释器",
+        "type": "string",
+        "hint": "留空则用 <gsv_root>/runtime/python.exe",
+        "default": ""
+      }
+    }
+  },
+  "director": {
+    "description": "导演核对",
+    "type": "object",
+    "hint": "发出去之前按导演本查一遍：出戏词、章节号、舞台说明、韩文",
+    "items": {
+      "gate": {
+        "description": "核验档位",
+        "type": "string",
+        "hint": "off=只记日志；clean=删舞台说明/章节号/出戏句（推荐）；rework=clean 后再让 LLM 按导演本重写一遍",
+        "default": "clean"
+      },
+      "provider_id": {
+        "description": "二遍用的 Provider ID",
+        "type": "string",
+        "hint": "留空则用当前会话的模型（gate=rework 时才有用）",
+        "default": ""
+      }
+    }
+  },
+  "reply": {
+    "description": "回复形态",
+    "type": "object",
+    "items": {
+      "force_text": {
+        "description": "强制发文字",
+        "type": "bool",
+        "hint": "关掉 AstrBot 的「文字转图片」，否则长回复会被渲染成图片",
+        "default": true
+      }
+    }
+  },
+  "debug": {
+    "description": "调试日志",
+    "type": "bool",
+    "default": false
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "enabled": true,
+  "persona": {
+    "inject": true,
+    "include_casebook": false,
+    "include_voice_lib": false,
+    "extra_prompt": ""
+  },
+  "voice": {
+    "default_on": true,
+    "fallback_zh": true,
+    "max_ja_chars": 200,
+    "send_text_after_voice": true,
+    "send_mode": "split",
+    "emotion_markers": true,
+    "faithful": true,
+    "translate_fallback": true
+  },
+  "tts": {
+    "api_base": "http://127.0.0.1:9880",
+    "timeout": 120,
+    "gpt_weights": "D:\\lucy\\weights\\lucy_v1_v5turbo-e10.ckpt",
+    "sovits_weights": "D:\\lucy\\weights\\lucy_v1_v5turbo_e8_s14528_l8.pth",
+    "set_weights_on_init": true,
+    "ref_audio": "",
+    "prompt_text": "",
+    "text_lang": "ja",
+    "prompt_lang": "ja",
+    "preset": "std",
+    "speed": 1.0,
+    "gap_ms": 160,
+    "normalize": true,
+    "auto_start": false,
+    "gsv_root": "D:\\GPT-SoVITS-v5",
+    "base_yaml": "",
+    "python": ""
+  },
+  "director": {
+    "gate": "clean",
+    "provider_id": ""
+  },
+  "reply": {
+    "force_text": true
+  },
+  "debug": false
+}
