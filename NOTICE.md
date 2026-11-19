@@ -19,8 +19,10 @@
 
 ## 模型权重
 
-`lucy_v1_v5turbo_e8_s14528_l8.pth`、`lucy_v1_v5turbo-e10.ckpt` 是在上述素材上
-微调得到的 LoRA / GPT 权重，**不随本仓库分发**。自行训练或持有者请遵守同样的使用范围。
+`lucy_v1_v5turbo_e8_s14528_l8.pth`（63.8 MB）、`lucy_v1_v5turbo-e10.ckpt`（148.1 MB）
+是在上述素材上微调得到的 LoRA / GPT 权重，作为 **Release 附件**提供（不进 git），
+同样属于衍生作品：**仅限个人本地使用**，请勿商用、勿二次分发。
+SHA-256 见 `docs/权重说明.md`。
 
 ## 第三方项目
 

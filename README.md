@@ -74,12 +74,13 @@ python tools/setup_astrbot_persona.py --password <WebUI密码>
 | **AstrBot** | ≥ 4.5（在桌面端 4.29.4 / core 4.29.4 上验证）。插件本身只用标准库 + `aiohttp`（AstrBot 已自带） |
 | **Python** | 安装器需要 Python 3.10+（AstrBot 自带的 `backend/python` 也行） |
 | **GPT-SoVITS** | v5turbo 推理环境，含 `api_v2.py`（本插件与 [露西语音工坊](https://github.com/) 共用同一套接口） |
-| **露西三件套权重** | 底模 `s2Gv5turbo.pth`（整合包自带）、音色 LoRA `lucy_v1_v5turbo_e8_s14528_l8.pth`、GPT(s1) `lucy_v1_v5turbo-e10.ckpt` |
+| **露西三件套权重** | 底模 `s2Gv5turbo.pth`（整合包自带）；音色 LoRA `lucy_v1_v5turbo_e8_s14528_l8.pth`（63.8 MB）与 GPT(s1) `lucy_v1_v5turbo-e10.ckpt`（148.1 MB）→ 见 [Release](https://github.com/dhies23/astrbot-lucy-voice/releases/latest)，或 `python tools/fetch-weights.py` 一键下载并校验 |
 | **参考音频** | 插件已内置 7 条（`assets/refs/*.wav`），无需另外准备 |
 | **ffmpeg** | 只有 QQ 官方机器人（`qq_official`）发语音时需要（wav→silk），AstrBot 会调用 |
 
-> ⚠️ 权重**不在仓库里**（200 MB+，且是训练产物）。把 `e8 LoRA` 与 `e10 GPT` 放到任意位置，
-> 在插件配置里填绝对路径即可。
+> 权重是训练产物（合计 213 MB），**不进 git**，挂在 Release 上：
+> 两个文件都带 SHA-256，`python tools/fetch-weights.py --dest ./weights` 会下载并校验。
+> 详细的来历、训练口径、加载验证见 [`docs/权重说明.md`](docs/权重说明.md)。
 
 ## 四、配置
 
@@ -178,6 +179,8 @@ python tests/test_poke_integration.py   # 戳一戳插件的平台门槛与触�
 |---|---|
 | `lucy-astrbot-1.0.0.zip`（3.9 MB） | 整合包：插件 + 安装器 + 人格脚本 + 试听 + 校验 |
 | `astrbot-plugin-lucy-voice-1.0.0.zip`（1.8 MB） | 插件单包，可直接 WebUI「从文件安装」 |
+| `lucy_v1_v5turbo_e8_s14528_l8.pth`（63.8 MB） | 音色 LoRA（SoVITS v5turbo, rank 8） |
+| `lucy_v1_v5turbo-e10.ckpt`（148.1 MB） | GPT(s1)（Text2Semantic, epoch 10） |
 
 重新打包：`python build-release.py`（生成到 `dist/`，该目录不进 git）。
 
