@@ -19,13 +19,6 @@
 ## 语音示例
 
 > 都是**真机跑出来的**（本机 GPT-SoVITS v5turbo + e8 LoRA + e10 GPT）。
-> 每条两种格式：**波形视频**（MP4，H.264+AAC，有画面有声音）和 **MP3**（96 kbps）。
-> 文件挂在 [Releases](https://github.com/dhies23/astrbot-lucy-voice/releases/latest) 上，点一下直接下载。
->
-> **为什么不能页内播放**：GitHub 的 Markdown 只内嵌图片，`<video>`/`<audio>` 会被过滤，
-> 仓库里的 MP4 在网页上只有「Download」页；仓库文件的 `raw` 链接在你的网络里还被打到了
-> `0.0.0.0`（实测）。要真正的页内播放器，只能在网页编辑器里把 MP4 拖进 README
-> （上传成 `user-attachments` 资源才会渲染）。模板：[`docs/demo/embed-snippet.md`](docs/demo/embed-snippet.md)。
 
 | # | 场景 | 念出来的（日语） | 屏幕上的（中文） | 下载 |
 |---|---|---|---|---|
