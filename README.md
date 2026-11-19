@@ -143,6 +143,28 @@ python tools/setup_astrbot_persona.py --password <WebUI密码>
 | **参考音频** | 插件已内置 7 条（`assets/refs/*.wav`），无需另外准备 |
 | **ffmpeg** | 只有 QQ 官方机器人（`qq_official`）发语音时需要（wav→silk），AstrBot 会调用 |
 
+### GPT-SoVITS v5turbo 整合包（约 9.9 GB，任选一个源）
+
+> 官方发布页是作者「花儿不哭」的语雀：<https://www.yuque.com/baicaigongchang1145haoyuangong/ib3g1e/dkxgpiy9zb96hob4>
+> 整合包**已经包含底模** `s2Gv5turbo.pth` 和全部预训练模型——装完只差露西的 LoRA + GPT（完整版整合包已带）。
+
+| 源 | 文件名 / 链接 | 说明 |
+|---|---|---|
+| **ModelScope 直链**（推荐，多线程满速） | [`GPT-SoVITS-v5-20261005nvidia50x0.7z`](https://www.modelscope.cn/models/FlowerCry/gpt-sovits-7z-pacakges/resolve/master/GPT-SoVITS-v5-20261005nvidia50x0.7z) | **50 系显卡**（Blackwell）用这个 |
+| ModelScope 直链（通用） | [`GPT-SoVITS-v5-20261005.7z`](https://www.modelscope.cn/models/FlowerCry/gpt-sovits-7z-pacakges/resolve/master/GPT-SoVITS-v5-20261005.7z) | 非 50 系显卡 |
+| **hf-mirror**（HuggingFace 国内镜像） | [`…nvidia50x0.7z`](https://hf-mirror.com/lj1995/GPT-SoVITS-windows-package/resolve/main/GPT-SoVITS-v5-20261005nvidia50x0.7z?download=true) · [`…20261005.7z`](https://hf-mirror.com/lj1995/GPT-SoVITS-windows-package/resolve/main/GPT-SoVITS-v5-20261005.7z?download=true) | 国内可高速 |
+| HuggingFace 原站 | [`…nvidia50x0.7z`](https://huggingface.co/lj1995/GPT-SoVITS-windows-package/resolve/main/GPT-SoVITS-v5-20261005nvidia50x0.7z?download=true) | 需代理 |
+| 百度网盘 | [`GPT-SoVITS-v5 最新版`](https://pan.baidu.com/share/init?surl=OE5qL0KreO-ASHwm6Zl9gA&pwd=mqpi) | 提取码 `mqpi`，需超级会员 |
+
+**只缺底模**（已有能跑的 GPT-SoVITS，只是没有 v5turbo）：
+
+| 源 | 链接 | 大小 |
+|---|---|---|
+| hf-mirror | [`s2Gv5turbo.pth`](https://hf-mirror.com/lj1995/GPT-SoVITS/resolve/main/gsv-v5-pretrained/s2Gv5turbo.pth) | 731 MB |
+| HuggingFace | [`s2Gv5turbo.pth`](https://huggingface.co/lj1995/GPT-SoVITS/resolve/main/gsv-v5-pretrained/s2Gv5turbo.pth) | 731 MB |
+
+放到 `GPT_SoVITS/pretrained_models/gsv-v5-pretrained/` 即可（文件名保持 `s2Gv5turbo.pth`）。
+
 > 权重是训练产物（合计 213 MB），**不进 git**，挂在 Release 上：
 > 两个文件都带 SHA-256，`python tools/fetch-weights.py --dest ./weights` 会下载并校验。
 > 详细的来历、训练口径、加载验证见 [`docs/权重说明.md`](docs/权重说明.md)。
