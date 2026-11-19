@@ -30,11 +30,14 @@ from astrbot.core import AstrBotConfig
 from astrbot.core.agent.message import TextPart
 from astrbot.core.message.components import Plain, Record
 from astrbot.core.provider.entities import ProviderRequest
-from astrbot.core.utils.astrbot_path import get_astrbot_temp_path
+from astrbot.core.utils.astrbot_path import (
+    get_astrbot_data_path,
+    get_astrbot_temp_path,
+)
 
 from .lucy import director, gsv, persona, presets, protocol
 from .lucy.persona import TRANSLATE_SYSTEM, TRANSLATE_USER
-from .lucy.config import Settings
+from .lucy.config import PLUGIN_DIR, Settings
 
 PLUGIN_NAME = "露西语音"
 STATUS_HELP = (
@@ -65,7 +68,33 @@ class LucyVoicePlugin(Star):
         self._persona_mode_logged = False
 
     # ------------------------------------------------------------ 生命周期
+    def _autoconfig_weights(self) -> tuple[str, str]:
+        """配置里没填权重时，在插件目录 / 数据目录里自动找一套。"""
+        if self.conf.gpt_weights and self.conf.sovits_weights:
+            return self.conf.gpt_weights, self.conf.sovits_weights
+        try:
+            data_dir = Path(get_astrbot_data_path())
+        except Exception:
+            data_dir = None
+        dirs = gsv.weight_search_dirs(PLUGIN_DIR, data_dir)
+        gpt, sovits = gsv.autodetect_weights(dirs)
+        if gpt or sovits:
+            self._client.set_weight_paths(gpt, sovits)
+            logger.info(
+                f"[{PLUGIN_NAME}] 自动找到权重：gpt={Path(gpt).name if gpt else '(无)'} "
+                f"sovits={Path(sovits).name if sovits else '(无)'}"
+            )
+            if not gpt or not sovits:
+                logger.warning(f"[{PLUGIN_NAME}] 只找到了一半权重，建议在配置里补齐")
+        else:
+            logger.info(
+                f"[{PLUGIN_NAME}] 没找到权重文件（找过 {len(dirs)} 个目录）；"
+                "可以在配置里填 tts.gpt_weights / tts.sovits_weights"
+            )
+        return gpt, sovits
+
     async def initialize(self) -> None:
+        self._autoconfig_weights()
         self._persona_text = persona.build_cached(
             self.conf.persona_casebook,
             self.conf.persona_voice_lib,

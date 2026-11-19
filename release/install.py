@@ -31,6 +31,8 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 PLUGIN_SRC = HERE / "astrbot-plugin-lucy-voice"
 PLUGIN_DIRNAME = "astrbot_plugin_lucy_voice"
+WEIGHTS_SUBDIR = "weights"
+WEIGHT_FILES = ("lucy_v1_v5turbo_e8_s14528_l8.pth", "lucy_v1_v5turbo-e10.ckpt")
 PERSONA_SCRIPT = HERE / "tools" / "setup_astrbot_persona.py"
 BUNDLE_ZIP = HERE / "astrbot-plugin-lucy-voice-1.0.0.zip"
 VERSION = "1.0.0"
@@ -203,6 +205,31 @@ def copy_plugin(dst: Path) -> None:
     )
 
 
+def bundle_weights() -> Path | None:
+    """安装包里带的权重：优先 插件目录/weights，其次 根目录/weights。"""
+    for cand in (PLUGIN_SRC / WEIGHTS_SUBDIR, HERE / WEIGHTS_SUBDIR):
+        if cand.is_dir() and all((cand / f).exists() for f in WEIGHT_FILES):
+            return cand
+    return None
+
+
+def copy_weights(src: Path, dst_plugin: Path) -> int:
+    """把权重拷进已安装的插件目录（插件启动时会自己扫到）。"""
+    target = dst_plugin / WEIGHTS_SUBDIR
+    target.mkdir(parents=True, exist_ok=True)
+    total = 0
+    for f in WEIGHT_FILES:
+        s, d = src / f, target / f
+        if d.exists() and d.stat().st_size == s.stat().st_size:
+            say(f"   · 权重已就位：{f}")
+            total += d.stat().st_size
+            continue
+        shutil.copy2(s, d)
+        total += d.stat().st_size
+        say(f"   · 复制权重：{f}（{d.stat().st_size/1048576:.1f} MB）")
+    return total
+
+
 def run_persona(args, base: str, password: str | None) -> int:
     cmd = [sys.executable, str(PERSONA_SCRIPT)]
     if password:
@@ -215,7 +242,7 @@ def run_persona(args, base: str, password: str | None) -> int:
 
 
 def install(args) -> int:
-    total = 5
+    total = 6
     data = find_data_dir(args.data)
     say(f"露西 × AstrBot 安装器 v{VERSION}")
     say(f"   AstrBot 数据目录：{data}")
@@ -265,7 +292,25 @@ def install(args) -> int:
         if online:
             say("   · 提示：AstrBot 正在运行，重载插件或重启后生效（WebUI → 插件管理 → 重载）")
 
-    step(4, total, "配置 AstrBot 人格")
+    step(4, total, "布置语音权重")
+    wsrc = None if args.skip_weights else bundle_weights()
+    if args.gpt_weights or args.sovits_weights:
+        say("   · 用命令行传的权重路径（写进配置）")
+    elif wsrc:
+        if used_api:
+            # 热装只装了代码，权重得单独放到插件目录里
+            copy_weights(wsrc, dst)
+        else:
+            say(f"   · 安装包里自带权重（{wsrc}），已随插件目录一起拷贝")
+        cfg["tts"]["gpt_weights"] = str((dst / WEIGHTS_SUBDIR / WEIGHT_FILES[1]).resolve())
+        cfg["tts"]["sovits_weights"] = str((dst / WEIGHTS_SUBDIR / WEIGHT_FILES[0]).resolve())
+        cfg_path.write_text(json.dumps(cfg, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        say(f"   · 配置已指向：{dst / WEIGHTS_SUBDIR}")
+    else:
+        say("   · 安装包里没有权重，也没传参数——插件启动时会在自己的 weights/ 里扫；"
+            "扫不到就用你现有的推理服务权重")
+
+    step(5, total, "配置 AstrBot 人格")
     if args.no_persona:
         say("   · --no-persona：跳过（插件会自己注入完整版人格）")
     elif not online:
@@ -278,7 +323,7 @@ def install(args) -> int:
         rc = run_persona(args, base, password)
         say(f"   · 人格脚本退出码：{rc}")
 
-    step(5, total, "自检")
+    step(6, total, "自检")
     if online and password:
         try:
             token = login(base, password)
@@ -353,6 +398,7 @@ def main() -> int:
     ap.add_argument("--sovits-weights", help="SoVITS LoRA 绝对路径（lucy_v1_v5turbo_e8_*.pth）")
     ap.add_argument("--gsv-root", help="GPT-SoVITS 根目录（含 api_v2.py），填了会自动开 auto_start")
     ap.add_argument("--no-persona", action="store_true", help="不写 AstrBot 人格")
+    ap.add_argument("--skip-weights", action="store_true", help="忽略安装包里的权重")
     ap.add_argument("--force-config", action="store_true", help="用默认值覆盖插件配置")
     ap.add_argument("--dry-run", action="store_true", help="只打印计划")
     ap.add_argument("--uninstall", action="store_true", help="回滚安装")

@@ -90,11 +90,22 @@ https://github.com/user-attachments/assets/5f7b4f2d-da62-4c97-80a6-890835c2cbdc
 
 ### A. 整合包（推荐，含安装器）
 
-1. 从 [Releases](https://github.com/dhies23/astrbot-lucy-voice/releases/latest) 下载 `lucy-astrbot-1.0.0.zip`，解压
+| 包 | 大小 | 含权重 | 适合 |
+|---|---|---|---|
+| `lucy-astrbot-1.0.0-full.zip` | ~200 MB | ✅ | **解压即用**：权重就放在插件目录里 |
+| `lucy-astrbot-1.0.0.zip` | ~4 MB | ❌ | 已经有权重 / 走 `tools/fetch-weights.py` 下载 |
+
+1. 从 [Releases](https://github.com/dhies23/astrbot-lucy-voice/releases/latest) 下载并解压
 2. 双击 `install-lucy-astrbot.cmd`，按提示填 WebUI 密码
 
 安装器会：找数据目录 → 合并插件配置（保留你改过的项）→ 装插件（运行中走 WebUI 热装）→
-写「露西」人格并设为默认 → 自检（插件是否激活、权重是否存在、9880 是否在线）。
+**把权重放进插件目录并写进配置** → 写「露西」人格并设为默认 → 自检。
+
+> **权重自动扫描**：插件启动时会在 `插件目录/weights/`、`插件数据目录/weights/`、
+> `AstrBot数据目录/weights/` 里找 `*.ckpt`（GPT）和 `*.pth`（SoVITS），
+> 按文件名里的 `v5turbo / e10 / e8` 打分挑最合适的（e8 优于 e1）。
+> 所以**只要把两个权重丢进插件目录的 `weights/`，配置里什么都不填也能出声**——
+> 日志会写 `[露西语音] 自动找到权重：gpt=… sovits=…`。
 
 ### B. 手动安装
 
@@ -119,7 +130,7 @@ python tools/setup_astrbot_persona.py --password <WebUI密码>
 | **AstrBot** | ≥ 4.5（在桌面端 4.29.4 / core 4.29.4 上验证）。插件本身只用标准库 + `aiohttp`（AstrBot 已自带） |
 | **Python** | 安装器需要 Python 3.10+（AstrBot 自带的 `backend/python` 也行） |
 | **GPT-SoVITS** | v5turbo 推理环境，含 `api_v2.py`（本插件与 [露西语音工坊](https://github.com/) 共用同一套接口） |
-| **露西三件套权重** | 底模 `s2Gv5turbo.pth`（整合包自带）；音色 LoRA `lucy_v1_v5turbo_e8_s14528_l8.pth`（63.8 MB）与 GPT(s1) `lucy_v1_v5turbo-e10.ckpt`（148.1 MB）→ 见 [Release](https://github.com/dhies23/astrbot-lucy-voice/releases/latest)，或 `python tools/fetch-weights.py` 一键下载并校验 |
+| **露西三件套权重** | 底模 `s2Gv5turbo.pth`（GPT-SoVITS 自带）；音色 LoRA `lucy_v1_v5turbo_e8_s14528_l8.pth`（63.8 MB）与 GPT(s1) `lucy_v1_v5turbo-e10.ckpt`（148.1 MB）→ 完整版整合包已内含，或从 [Release](https://github.com/dhies23/astrbot-lucy-voice/releases/latest) 单独下载 / `python tools/fetch-weights.py` |
 | **参考音频** | 插件已内置 7 条（`assets/refs/*.wav`），无需另外准备 |
 | **ffmpeg** | 只有 QQ 官方机器人（`qq_official`）发语音时需要（wav→silk），AstrBot 会调用 |
 
@@ -222,7 +233,8 @@ python tests/test_poke_integration.py   # 戳一戳插件的平台门槛与触�
 
 | 文件 | 内容 |
 |---|---|
-| `lucy-astrbot-1.0.0.zip`（3.9 MB） | 整合包：插件 + 安装器 + 人格脚本 + 试听 + 校验 |
+| `lucy-astrbot-1.0.0-full.zip`（~200 MB） | **完整版**整合包：插件 + **语音权重** + 安装器 + 人格脚本 + 试听 + 校验 |
+| `lucy-astrbot-1.0.0.zip`（3.9 MB） | 精简包：同上但不含权重 |
 | `astrbot-plugin-lucy-voice-1.0.0.zip`（1.8 MB） | 插件单包，可直接 WebUI「从文件安装」 |
 | `lucy_v1_v5turbo_e8_s14528_l8.pth`（63.8 MB） | 音色 LoRA（SoVITS v5turbo, rank 8） |
 | `lucy_v1_v5turbo-e10.ckpt`（148.1 MB） | GPT(s1)（Text2Semantic, epoch 10） |

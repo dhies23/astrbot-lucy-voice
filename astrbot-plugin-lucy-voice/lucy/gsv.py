@@ -39,6 +39,23 @@ class GSVClient:
         self._session: aiohttp.ClientSession | None = None
         self._weights_applied: tuple[str, str] | None = None
         self.last_error: str = ""
+        # 目录里自动扫到的权重（配置没填时生效）
+        self._auto_gpt: str = ""
+        self._auto_sovits: str = ""
+
+    def set_weight_paths(self, gpt: str = "", sovits: str = "") -> None:
+        if gpt:
+            self._auto_gpt = gpt
+        if sovits:
+            self._auto_sovits = sovits
+
+    @property
+    def gpt_weights(self) -> str:
+        return self.cfg.gpt_weights or self._auto_gpt
+
+    @property
+    def sovits_weights(self) -> str:
+        return self.cfg.sovits_weights or self._auto_sovits
 
     # ---------------------------------------------------------------- session
     def _get_session(self) -> aiohttp.ClientSession:
@@ -83,9 +100,9 @@ class GSVClient:
         return False
 
     async def ensure_weights(self, force: bool = False) -> bool:
-        """按配置切权重；同一组路径只切一次。"""
-        gpt = self.cfg.gpt_weights
-        sovits = self.cfg.sovits_weights
+        """按配置（或目录里自动扫到的）路径切权重；同一组只切一次。"""
+        gpt = self.gpt_weights
+        sovits = self.sovits_weights
         if not gpt and not sovits:
             return True
         key = (gpt, sovits)
@@ -359,3 +376,58 @@ def default_weight_paths(plugin_dir: Path) -> tuple[str, str]:
     gpt = find_weights(wdir, ("*.ckpt",))
     sovits = find_weights(wdir, ("*.pth",))
     return (str(gpt[0]) if gpt else "", str(sovits[0]) if sovits else "")
+
+
+# ---------------------------------------------------------------------------
+# 权重自动发现：发进插件目录就生效，不用手填路径
+# ---------------------------------------------------------------------------
+_GPT_HINTS = ("v5turbo", "e10", "lucy")
+_SOVITS_HINTS = ("v5turbo", "e8", "lucy")
+
+
+def _score(path: Path, hints: tuple[str, ...]) -> int:
+    name = path.name.lower()
+    return sum(1 for h in hints if h in name)
+
+
+def autodetect_weights(dirs) -> tuple[str, str]:
+    """在给定目录里找 GPT 与 SoVITS 权重。
+
+    只看一层，按文件名线索打分：GPT 偏好含 `v5turbo/e10/lucy` 的 `.ckpt`，
+    SoVITS 偏好含 `v5turbo/e8/lucy` 的 `.pth`。找不到返回空串。
+    """
+    gpt: list[Path] = []
+    sovits: list[Path] = []
+    for d in dirs:
+        if not d:
+            continue
+        root = Path(d)
+        if not root.is_dir():
+            continue
+        for p in root.glob("*"):
+            if not p.is_file():
+                continue
+            suffix = p.suffix.lower()
+            if suffix == ".ckpt":
+                gpt.append(p)
+            elif suffix == ".pth":
+                sovits.append(p)
+
+    def best(items: list[Path], hints: tuple[str, ...]) -> str:
+        if not items:
+            return ""
+        ranked = sorted(
+            items, key=lambda p: (-_score(p, hints), -p.stat().st_size)
+        )
+        return str(ranked[0])
+
+    return best(gpt, _GPT_HINTS), best(sovits, _SOVITS_HINTS)
+
+
+def weight_search_dirs(plugin_dir: Path, data_dir: Path | None = None) -> list[Path]:
+    """查权重的目录顺序：插件自己的 weights/ → 插件数据目录 → AstrBot data/weights → 当前目录。"""
+    dirs = [plugin_dir / "weights", plugin_dir / "runtime" / "weights"]
+    if data_dir:
+        dirs += [data_dir / "weights", data_dir / "plugin_data" / "lucy_voice" / "weights"]
+    dirs.append(Path.cwd() / "weights")
+    return dirs

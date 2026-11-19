@@ -259,6 +259,48 @@ async def collect(agen):
 
 
 # --------------------------------------------------------------------------- 7
+def test_autodetect(mod):
+    """权重自动发现：目录里放好文件就认得出来（发行整合包靠这个免配置）。"""
+    from lucy_test_pkg.lucy import gsv
+    import tempfile
+
+    print("\n== 权重自动发现 ==")
+    with tempfile.TemporaryDirectory() as d:
+        w = Path(d)
+        (w / "lucy_v1_v5turbo-e10.ckpt").write_bytes(b"x" * 2048)
+        (w / "lucy_v1_v5turbo_e8_s14528_l8.pth").write_bytes(b"x" * 1024)
+        (w / "lucy_v1_v5turbo_e1_s1816_l8.pth").write_bytes(b"x" * 512)
+        (w / "notes.txt").write_text("ignore me")
+
+        gpt, sov = gsv.autodetect_weights([w])
+        check("找到 GPT 权重", gpt.endswith("lucy_v1_v5turbo-e10.ckpt"), gpt)
+        check("优先 e8 而不是 e1", sov.endswith("e8_s14528_l8.pth"), sov)
+        check("忽略非权重文件", "notes" not in gpt + sov)
+
+    with tempfile.TemporaryDirectory() as d:
+        w = Path(d)
+        (w / "lucy_v1_v5turbo-e10.ckpt").write_bytes(b"x" * 2048)
+        (w / "lucy_v1_v5turbo_e8_s14528_l8.pth").write_bytes(b"x" * 1024)
+        dirs = gsv.weight_search_dirs(Path("B:/lucy文本skill/astrbot-plugin-lucy-voice"), w)
+        check("搜索目录包含插件自带 weights/",
+              str(dirs[0]).endswith("weights"), str(dirs[0]))
+        check("搜索目录包含数据目录", any(str(x).startswith(d) for x in dirs), str(dirs))
+
+    class Cfg:
+        gpt_weights = ""
+        sovits_weights = ""
+    client = gsv.GSVClient(Cfg())
+    client.set_weight_paths("/a/e10.ckpt", "/a/e8.pth")
+    check("空配置时用自动发现的", client.gpt_weights == "/a/e10.ckpt", client.gpt_weights)
+
+    class Cfg2:
+        gpt_weights = "/cfg/g.ckpt"
+        sovits_weights = "/cfg/s.pth"
+    c2 = gsv.GSVClient(Cfg2())
+    c2.set_weight_paths("/a/e10.ckpt", "/a/e8.pth")
+    check("配置优先于自动发现", c2.gpt_weights == "/cfg/g.ckpt", c2.gpt_weights)
+
+
 def test_payload(mod):
     from lucy_test_pkg.lucy import gsv
 
@@ -289,7 +331,7 @@ def test_payload(mod):
 
 def main() -> int:
     mod = load_plugin()
-    for fn in (test_protocol, test_director, test_presets, test_audio, test_persona, test_payload, test_plugin):
+    for fn in (test_protocol, test_director, test_presets, test_audio, test_persona, test_autodetect, test_payload, test_plugin):
         try:
             fn(mod)
         except Exception as e:

@@ -12,6 +12,8 @@ from __future__ import annotations
 import hashlib
 import shutil
 import zipfile
+import argparse
+import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -21,6 +23,7 @@ TOOLS = ROOT / "tools"
 DIST = ROOT / "dist"
 VERSION = "1.0.0"
 NAME = f"lucy-astrbot-{VERSION}"
+WEIGHT_FILES = ("lucy_v1_v5turbo_e8_s14528_l8.pth", "lucy_v1_v5turbo-e10.ckpt")
 STAGE = ROOT / "build" / "release" / NAME
 
 SKIP = {"__pycache__", ".git", ".pytest_cache"}
@@ -47,10 +50,13 @@ def copy_tree(src: Path, dst: Path) -> None:
             shutil.copy2(p, target)
 
 
-def zip_plugin(out: Path) -> None:
+def zip_plugin(out: Path, include_weights: bool = False) -> None:
+    """插件单包（热装用）。默认不含权重——213 MB 塞不进 WebUI 上传。"""
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as z:
         for p in sorted(PLUGIN.rglob("*")):
             if any(part in SKIP for part in p.parts) or p.suffix == ".pyc" or not p.is_file():
+                continue
+            if not include_weights and "weights" in p.relative_to(PLUGIN).parts:
                 continue
             z.write(p, f"astrbot_plugin_lucy_voice/{p.relative_to(PLUGIN).as_posix()}")
 
@@ -63,16 +69,52 @@ def zip_tree(src: Path, out: Path, arcroot: str) -> None:
             z.write(p, f"{arcroot}/{p.relative_to(src).as_posix()}")
 
 
+def find_weights(explicit: str | None) -> Path | None:
+    """找一份包含两个权重文件的目录。"""
+    cands: list[Path] = []
+    if explicit:
+        cands.append(Path(explicit))
+    env = os.environ.get("LUCY_WEIGHTS_DIR")
+    if env:
+        cands.append(Path(env))
+    cands += [
+        ROOT / "weights",
+        PLUGIN / "weights",
+        Path.home() / "lucy-weights",
+        Path(r"B:/lucy文本skill/dsh-skill-lucy-voice/runtime/weights"),
+    ]
+    for c in cands:
+        if c.is_dir() and all((c / f).exists() for f in WEIGHT_FILES):
+            return c
+    return None
+
+
 def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--weights-dir", help="包含两个权重文件的目录（默认自动找）")
+    ap.add_argument("--no-weights", action="store_true", help="打精简版（不含权重）")
+    args = ap.parse_args()
+
     if STAGE.exists():
         shutil.rmtree(STAGE)
     STAGE.mkdir(parents=True)
     DIST.mkdir(exist_ok=True)
 
-    # 1) 插件源码 + 单包 zip（热装用）
+    # 1) 插件源码 + 单包 zip（热装用，永远不含权重）
     copy_tree(PLUGIN, STAGE / "astrbot-plugin-lucy-voice")
     zip_plugin(STAGE / "astrbot-plugin-lucy-voice-1.0.0.zip")
     zip_plugin(DIST / "astrbot-plugin-lucy-voice-1.0.0.zip")
+
+    # 1b) 权重（可选）：放进插件目录的 weights/，插件启动时自己扫
+    weights_dir = None if args.no_weights else find_weights(args.weights_dir)
+    if weights_dir:
+        wdst = STAGE / "astrbot-plugin-lucy-voice" / "weights"
+        wdst.mkdir(parents=True, exist_ok=True)
+        for f in WEIGHT_FILES:
+            shutil.copy2(weights_dir / f, wdst / f)
+        print(f"权重已打包：{weights_dir} → 插件目录/weights/")
+    else:
+        print("!! 没找到权重，打成精简版（需要用户自己下权重）")
 
     # 2) 安装器
     for name in ("install.py", "install-lucy-astrbot.cmd", "uninstall-lucy-astrbot.cmd", "安装说明.md"):
@@ -90,16 +132,9 @@ def main() -> int:
     # 4) 试听
     demo = STAGE / "demo"
     demo.mkdir()
-    demo_src = ROOT / "docs" / "demo"
-    if demo_src.is_dir():
-        for media in sorted(demo_src.iterdir()):
-            if media.suffix in (".mp3", ".mp4", ".png", ".md") and media.is_file():
-                shutil.copy2(media, demo / media.name)
-    else:
-        for sample in (ROOT / "out" / "live_std.wav",):
-            if sample.exists():
-                shutil.copy2(sample, demo / "japanese_sample.wav")
-                break
+    sample = ROOT / "out" / "live_std.wav"
+    if sample.exists():
+        shutil.copy2(sample, demo / "japanese_sample.wav")
 
     # 5) 版本与校验
     (STAGE / "VERSION.txt").write_text(
@@ -112,11 +147,13 @@ def main() -> int:
     (STAGE / "SHA256SUMS.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
     # 6) 打包
-    out = DIST / f"{NAME}.zip"
+    suffix = "-full" if weights_dir else ""
+    out = DIST / f"{NAME}{suffix}.zip"
     zip_tree(STAGE, out, NAME)
     total = sum(p.stat().st_size for p in STAGE.rglob("*") if p.is_file())
     print(f"文件数 {len(files)} / 解包后 {total/1024/1024:.2f} MB")
-    print(f"整合包 {out.name}: {out.stat().st_size/1024/1024:.2f} MB")
+    print(f"整合包 {out.name}: {out.stat().st_size/1024/1024:.2f} MB"
+          + ("（含权重）" if weights_dir else "（不含权重）"))
     print(f"  sha256 {sha256(out)}")
     print(f"单包   astrbot-plugin-lucy-voice-1.0.0.zip: "
           f"{(DIST/'astrbot-plugin-lucy-voice-1.0.0.zip').stat().st_size/1024/1024:.2f} MB")
