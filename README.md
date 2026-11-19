@@ -18,38 +18,36 @@
 
 ## 语音示例
 
-> 下面都是**真机跑出来的**（本机 GPT-SoVITS v5turbo + e8 LoRA + e10 GPT）。
-> 每条都给两种：**波形视频**（MP4，有画面有声音）和 **音频**（MP3 96 kbps）。
+> 都是**真机跑出来的**（本机 GPT-SoVITS v5turbo + e8 LoRA + e10 GPT）。
+> 每条两种格式：**波形视频**（MP4，H.264+AAC，有画面有声音）和 **MP3**（96 kbps）。
+> 文件挂在 [Releases](https://github.com/dhies23/astrbot-lucy-voice/releases/latest) 上，点一下直接下载。
 >
-> GitHub 的 Markdown 只让**图片**内嵌，`<video>` / `<audio>` 会被过滤，仓库里的 MP4 只能是链接。
-> 所以下面做成：表格给时长和音频链接，再接一组**海报图**——点图就在浏览器新标签里播放 MP4。
->
-> 想做到像别的仓库那样**页内直接播放**：得在网页编辑器里把 MP4 拖进 README（上传成
-> `user-attachments` 资源才渲染播放器）。占位模板见
-> [`docs/demo/embed-snippet.md`](docs/demo/embed-snippet.md)。
+> **为什么不能页内播放**：GitHub 的 Markdown 只内嵌图片，`<video>`/`<audio>` 会被过滤，
+> 仓库里的 MP4 在网页上只有「Download」页；仓库文件的 `raw` 链接在你的网络里还被打到了
+> `0.0.0.0`（实测）。要真正的页内播放器，只能在网页编辑器里把 MP4 拖进 README
+> （上传成 `user-attachments` 资源才会渲染）。模板：[`docs/demo/embed-snippet.md`](docs/demo/embed-snippet.md)。
 
-| # | 场景 | 念出来的（日语） | 屏幕上的（中文） | 播放 |
+| # | 场景 | 念出来的（日语） | 屏幕上的（中文） | 下载 |
 |---|---|---|---|---|
-| 01 | 迎接 | おかえりなさいませ、マスター。ご飯はまだ温かいです。 | ……主人回来了。饭还温着。 | [▶ 4.8 s](https://github.com/dhies23/astrbot-lucy-voice/raw/main/docs/demo/01-greeting.mp4) · [♪](https://github.com/dhies23/astrbot-lucy-voice/raw/main/docs/demo/01-greeting.mp3) |
-| 02 | 完整一轮（报时间＋动作） | マスターが戻りました。ご飯はまだ温かいまま、ルーシーがずっと一番奥の段に入れておきました。まず座ってください。ルーシーが持ってきます。 | ……主人回来了。饭还温着的，露西一直搁在最里面那一格。先坐下吧，露西去盛。 | [▶ 11.7 s](https://github.com/dhies23/astrbot-lucy-voice/raw/main/docs/demo/02-full-reply.mp4) · [♪](https://github.com/dhies23/astrbot-lucy-voice/raw/main/docs/demo/02-full-reply.mp3) |
-| 03 | 被问「你是谁」 | ルーシー・ヴァレンタインです。サンプル名はこれで、PIM-001。炊事、洗濯、掃除、こういうことはルーシーにできます。 | 露西·瓦伦汀。样品名称就是这个，PIM-001。做饭、洗衣、打扫，这些露西都会…… | [▶ 15.7 s](https://github.com/dhies23/astrbot-lucy-voice/raw/main/docs/demo/03-who-are-you.mp4) · [♪](https://github.com/dhies23/astrbot-lucy-voice/raw/main/docs/demo/03-who-are-you.mp3) |
-| 04 | 情绪 `[开心]` | 初めてマスターに褒めてもらえました。嬉しい！ | 第一次被主人夸了。好开心！ | [▶ 4.0 s](https://github.com/dhies23/astrbot-lucy-voice/raw/main/docs/demo/04-emotion-happy.mp4) · [♪](https://github.com/dhies23/astrbot-lucy-voice/raw/main/docs/demo/04-emotion-happy.mp3) |
-| 05 | 情绪 `[温柔]` + `[停:300]` | ……そこにいてください。ルーシー、ご飯を温めてきますね。 | ……请待在那里。露西去把饭热一下。 | [▶ 5.1 s](https://github.com/dhies23/astrbot-lucy-voice/raw/main/docs/demo/05-emotion-soft.mp4) · [♪](https://github.com/dhies23/astrbot-lucy-voice/raw/main/docs/demo/05-emotion-soft.mp3) |
-| 06 | 中文兜底（说明口音） | —— | 主人，饭已经做好了。 | [▶ 2.0 s](https://github.com/dhies23/astrbot-lucy-voice/raw/main/docs/demo/06-zh-fallback.mp4) · [♪](https://github.com/dhies23/astrbot-lucy-voice/raw/main/docs/demo/06-zh-fallback.mp3) |
+| 01 | 迎接 | おかえりなさいませ、マスター。ご飯はまだ温かいです。 | ……主人回来了。饭还温着。 | [▶ 4.8 s MP4](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/01-greeting.mp4) · [♪ MP3](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/01-greeting.mp3) |
+| 02 | 完整一轮 | マスターが戻りました。ご飯はまだ温かいまま、ルーシーがずっと一番奥の段に入れておきました。 | ……主人回来了。饭还温着的，露西一直搁在最里面那一格。 | [▶ 11.7 s MP4](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/02-full-reply.mp4) · [♪ MP3](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/02-full-reply.mp3) |
+| 03 | 自报家门 | ルーシー・ヴァレンタインです。サンプル名はこれで、PIM-001。 | 露西·瓦伦汀。样品名称就是这个，PIM-001。 | [▶ 15.7 s MP4](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/03-who-are-you.mp4) · [♪ MP3](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/03-who-are-you.mp3) |
+| 04 | 情绪 [开心] | 初めてマスターに褒めてもらえました。嬉しい！ | 第一次被主人夸了。好开心！ | [▶ 4.0 s MP4](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/04-emotion-happy.mp4) · [♪ MP3](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/04-emotion-happy.mp3) |
+| 05 | 情绪 [温柔]+[停:300] | ……そこにいてください。ルーシー、ご飯を温めてきますね。 | ……请待在那里。露西去把饭热一下。 | [▶ 5.1 s MP4](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/05-emotion-soft.mp4) · [♪ MP3](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/05-emotion-soft.mp3) |
+| 06 | 中文兜底 | —— | 主人，饭已经做好了。 | [▶ 2.0 s MP4](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/06-zh-fallback.mp4) · [♪ MP3](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/06-zh-fallback.mp3) |
 
+### 波形视频（点海报下载，本地播放）
 
-### 波形视频
-
-点海报图 → 浏览器新标签里直接播放（带声音）。
+海报就是视频里的一帧；点开下载 MP4，用系统播放器看（波形 + 播放头 + 声音）。
 
 | | |
 |---|---|
-| [<img width="420" src="docs/demo/01-greeting.poster.png">](https://github.com/dhies23/astrbot-lucy-voice/raw/main/docs/demo/01-greeting.mp4) | [<img width="420" src="docs/demo/02-full-reply.poster.png">](https://github.com/dhies23/astrbot-lucy-voice/raw/main/docs/demo/02-full-reply.mp4) |
-| **01 · 迎接**（4.8 s）· [♪ MP3](https://github.com/dhies23/astrbot-lucy-voice/raw/main/docs/demo/01-greeting.mp3) | **02 · 完整一轮**（11.7 s）· [♪ MP3](https://github.com/dhies23/astrbot-lucy-voice/raw/main/docs/demo/02-full-reply.mp3) |
-| [<img width="420" src="docs/demo/03-who-are-you.poster.png">](https://github.com/dhies23/astrbot-lucy-voice/raw/main/docs/demo/03-who-are-you.mp4) | [<img width="420" src="docs/demo/04-emotion-happy.poster.png">](https://github.com/dhies23/astrbot-lucy-voice/raw/main/docs/demo/04-emotion-happy.mp4) |
-| **03 · 自报家门**（15.7 s）· [♪ MP3](https://github.com/dhies23/astrbot-lucy-voice/raw/main/docs/demo/03-who-are-you.mp3) | **04 · 情绪 [开心]**（4.0 s）· [♪ MP3](https://github.com/dhies23/astrbot-lucy-voice/raw/main/docs/demo/04-emotion-happy.mp3) |
-| [<img width="420" src="docs/demo/05-emotion-soft.poster.png">](https://github.com/dhies23/astrbot-lucy-voice/raw/main/docs/demo/05-emotion-soft.mp4) | [<img width="420" src="docs/demo/06-zh-fallback.poster.png">](https://github.com/dhies23/astrbot-lucy-voice/raw/main/docs/demo/06-zh-fallback.mp4) |
-| **05 · 情绪 [温柔]+[停:300]**（5.1 s）· [♪ MP3](https://github.com/dhies23/astrbot-lucy-voice/raw/main/docs/demo/05-emotion-soft.mp3) | **06 · 中文兜底**（2.0 s）· [♪ MP3](https://github.com/dhies23/astrbot-lucy-voice/raw/main/docs/demo/06-zh-fallback.mp3) |
+| [<img width="420" src="docs/demo/01-greeting.poster.png">](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/01-greeting.mp4) | [<img width="420" src="docs/demo/02-full-reply.poster.png">](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/02-full-reply.mp4) |
+| **01 · 迎接**（4.8 s） | **02 · 完整一轮**（11.7 s） |
+| [<img width="420" src="docs/demo/03-who-are-you.poster.png">](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/03-who-are-you.mp4) | [<img width="420" src="docs/demo/04-emotion-happy.poster.png">](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/04-emotion-happy.mp4) |
+| **03 · 自报家门**（15.7 s） | **04 · 情绪 [开心]**（4.0 s） |
+| [<img width="420" src="docs/demo/05-emotion-soft.poster.png">](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/05-emotion-soft.mp4) | [<img width="420" src="docs/demo/06-zh-fallback.poster.png">](https://github.com/dhies23/astrbot-lucy-voice/releases/download/v1.0.0/06-zh-fallback.mp4) |
+| **05 · 情绪 [温柔]+[停:300]**（5.1 s） | **06 · 中文兜底**（2.0 s） |
 
 第 06 条是「模型没写 `<ja>` 时」的兜底：还是她的音色，但中文发音带口音——
 这正是这个插件坚持让模型写**日语朗读稿**的原因。
