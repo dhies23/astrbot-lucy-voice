@@ -45,7 +45,7 @@
 
 ### A. 整合包（推荐，含安装器）
 
-1. 下载 [`dist/lucy-astrbot-1.0.0.zip`](dist/lucy-astrbot-1.0.0.zip)，解压
+1. 从 [Releases](https://github.com/dhies23/astrbot-lucy-voice/releases/latest) 下载 `lucy-astrbot-1.0.0.zip`，解压
 2. 双击 `install-lucy-astrbot.cmd`，按提示填 WebUI 密码
 
 安装器会：找数据目录 → 合并插件配置（保留你改过的项）→ 装插件（运行中走 WebUI 热装）→
@@ -172,12 +172,14 @@ python tests/test_poke_integration.py   # 戳一戳插件的平台门槛与触�
 
 ## 八、发行包
 
+都挂在 [**Releases**](https://github.com/dhies23/astrbot-lucy-voice/releases/latest)：
+
 | 文件 | 内容 |
 |---|---|
-| [`dist/lucy-astrbot-1.0.0.zip`](dist/lucy-astrbot-1.0.0.zip) | 整合包：插件 + 安装器 + 人格脚本 + 试听 + 校验（3.9 MB） |
-| [`dist/astrbot-plugin-lucy-voice-1.0.0.zip`](dist/astrbot-plugin-lucy-voice-1.0.0.zip) | 插件单包（可 WebUI「从文件安装」，1.8 MB） |
+| `lucy-astrbot-1.0.0.zip`（3.9 MB） | 整合包：插件 + 安装器 + 人格脚本 + 试听 + 校验 |
+| `astrbot-plugin-lucy-voice-1.0.0.zip`（1.8 MB） | 插件单包，可直接 WebUI「从文件安装」 |
 
-重新打包：`python build-release.py`（会把两个包都生成到 `dist/`）。
+重新打包：`python build-release.py`（生成到 `dist/`，该目录不进 git）。
 
 ## 九、许可与致谢
 

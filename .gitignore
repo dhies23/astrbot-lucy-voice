@@ -3,12 +3,11 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 
-# 构建产物（dist/ 里只保留发行包）
+# 构建产物 + 发行包（发行包走 GitHub Releases）
 build/
+dist/
 out/
 *.zip
-!dist/
-!dist/*.zip
 
 # 本地运行态
 .venv/
